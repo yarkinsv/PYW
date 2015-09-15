@@ -1,0 +1,8 @@
+<div class="panel {% if day_plan.IsPast %}panel-default{% endif %}{% if day_plan.IsToday %}panel-success{% endif %}{% if day_plan.IsFuture %}panel-info{% endif %}">
+    <div class="panel-heading text-center">{{ day_plan.day_name }} ({{ day_plan.date }})</div>
+    <div class="panel-body">
+        <a href="#" class="list-group-item {% if day_plan.IsPast %}panel-default{% endif %}{% if day_plan.IsToday %}panel-success{% endif %}{% if day_plan.IsFuture %}panel-info{% endif %}">{{ day_plan.physical_activity }}</a>
+        <a href="{% if day_plan.educational_activity %}{% url 'educational_activity_result' day_plan.educational_activity.id %}{% endif %}" class="list-group-item {% if day_plan.IsPast %}panel-default{% endif %}{% if day_plan.IsToday %}panel-success{% endif %}{% if day_plan.IsFuture %}panel-info{% endif %}">{{ day_plan.educational_activity }}</a>
+        <a href="#" class="list-group-item {% if day_plan.IsPast %}panel-default{% endif %}{% if day_plan.IsToday %}panel-success{% endif %}{% if day_plan.IsFuture %}panel-info{% endif %}">{{ day_plan.single_task }}</a>
+    </div>
+</div>
