@@ -1,8 +1,35 @@
 <div class="panel {% if day_plan.IsPast %}panel-default{% endif %}{% if day_plan.IsToday %}panel-success{% endif %}{% if day_plan.IsFuture %}panel-info{% endif %}">
-    <div class="panel-heading text-center">{{ day_plan.day_name }} ({{ day_plan.date }})</div>
+    <div class="panel-heading text-center">{{ day_plan.day.name }} ({{ day_plan.date }})</div>
     <div class="panel-body">
-        <a href="#" class="list-group-item {% if day_plan.IsPast %}panel-default{% endif %}{% if day_plan.IsToday %}panel-success{% endif %}{% if day_plan.IsFuture %}panel-info{% endif %}">{{ day_plan.physical_activity }}</a>
-        <a href="{% if day_plan.educational_activity %}{% url 'educational_activity_result' day_plan.educational_activity.id %}{% endif %}" class="list-group-item {% if day_plan.IsPast %}panel-default{% endif %}{% if day_plan.IsToday %}panel-success{% endif %}{% if day_plan.IsFuture %}panel-info{% endif %}">{{ day_plan.educational_activity }}</a>
-        <a href="#" class="list-group-item {% if day_plan.IsPast %}panel-default{% endif %}{% if day_plan.IsToday %}panel-success{% endif %}{% if day_plan.IsFuture %}panel-info{% endif %}">{{ day_plan.single_task }}</a>
+        <a href="#"
+           class="list-group-item {% if day_plan.IsPast %}panel-default{% endif %}
+                                  {% if day_plan.IsToday %}panel-success{% endif %}
+                                  {% if day_plan.IsFuture %}panel-info{% endif %}">
+            {{ day_plan.physical_activity_result }}&zwnj;
+        </a>
+        <a href="{% if not day_plan.educational_activity_result and not day_plan.IsPast %}
+                    {% url 'educational_activity_result' day_plan.date.year day_plan.date.month day_plan.date.day %}
+                {% elif not day_plan.educational_activity_result.id and not day_plan.IsPast %}
+                    {% url 'educational_activity_result' day_plan.date.year day_plan.date.month day_plan.date.day day_plan.educational_activity_result.planned_activity.id %}
+                {% elif day_plan.educational_activity_result and day_plan.educational_activity_result.id %}
+                    {% url 'educational_activity_result' day_plan.educational_activity_result.id %}
+                {% else %}
+                    #
+                {% endif %}"
+           class="list-group-item {% if day_plan.IsPast %}panel-default{% endif %}
+                                  {% if day_plan.IsToday %}panel-success{% endif %}
+                                  {% if day_plan.IsFuture %}panel-info{% endif %}">
+            <font color="{% if not day_plan.IsFuture and day_plan.educational_activity_result.result == 'C' %}#54C571{% endif %}
+                         {% if not day_plan.IsFuture and day_plan.educational_activity_result.result == 'U' %}#E77471{% endif %}
+                         {% if day_plan.IsFuture %}#AFDCEC{% endif %}">
+                {{ day_plan.educational_activity_result}}&zwnj;
+            </font>
+        </a>
+        <a href="#"
+           class="list-group-item {% if day_plan.IsPast %}panel-default{% endif %}
+                                  {% if day_plan.IsToday %}panel-success{% endif %}
+                                  {% if day_plan.IsFuture %}panel-info{% endif %}">
+            {{ day_plan.single_task }}&zwnj;
+        </a>
     </div>
 </div>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load staticfiles %}
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>Educational Activity {{ activity.date }} ({{ activity.week_day_name }})</h1>
+    </div>
+    <form class="form-horizontal" role="form" method="post" action=".">{% csrf_token %}
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="planned_activity">Planned Activity:</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="planned_activity" name="planned_activity"
+                        {% if activity.is_past %} disabled {% endif %}>
+                    {% for a in activity_types %}
+                    <option value="{{ a.id }}" {% if a.id == activity.planned_activity.id %}selected="selected"{% endif %}>
+                        {{ a.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="planned_result">Planned:</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" rows="3" id="planned_result" name="planned_result"
+                        {% if activity.is_past %} disabled {% endif %}>{{ activity.planned_result }}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="result">Result:</label>
+            <div class="col-sm-10">
+                <input type="checkbox" data-toggle="toggle" data-onstyle="success" id="result" name="result"
+                       data-on="Completed" data-off="Uncompleted"
+                       {% if activity.result == 'C' %} checked {% endif %}
+                       {% if activity.is_future %} disabled {% endif %}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="comment">Comment:</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" rows="3" id="comment" name="comment"
+                        {% if activity.is_future %} disabled {% endif %}>{{ activity.comment }}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
