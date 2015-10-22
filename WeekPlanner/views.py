@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, Context, loader
 import datetime
 from .models import *
+from .choices import *
 import pdb
 
 
@@ -113,3 +114,39 @@ def educational_activity_result_create_activity_id(request, year, month, day, ac
         activity_result.date = activity_date
         activity_result.save()
     return educational_activity_result_id(request, activity_result.id)
+
+
+def physical_activity_result_id(request, activity_id):
+    activity = get_object_or_404(PhysicalActivityResult, pk=activity_id)
+    activity_types = list(PhysicalActivity.objects.all())
+    exercises = list(Exercise.objects.all())
+    request_context = RequestContext(request)
+    request_context.push({'activity': activity, 'activity_types': activity_types, 'exercises': exercises})
+    template = loader.get_template('main/physical_activity_result_form.html')
+    form = template.render(request_context)
+    return HttpResponse(form)
+
+
+def physical_activity_result_create(request, year, month, day):
+    activity_date = datetime.date(int(year), int(month), int(day))
+    phys = list(PhysicalActivityResult.objects.filter(date=activity_date)[:1])
+    if phys:
+        activity_result = phys[0]
+    else:
+        activity_result = PhysicalActivityResult()
+        activity_result.date = activity_date
+        activity_result.save()
+    return physical_activity_result_id(request, activity_result.id)
+
+
+def physical_activity_result_create_activity_id(request, year, month, day, activity_id):
+    activity_date = datetime.date(int(year), int(month), int(day))
+    phys = list(PhysicalActivityResult.objects.filter(date=activity_date)[:1])
+    if phys:
+        activity_result = phys[0]
+    else:
+        activity_result = PhysicalActivityResult()
+        activity_result.planned_activity = get_object_or_404(PhysicalActivity, pk=int(activity_id))
+        activity_result.date = activity_date
+        activity_result.save()
+    return physical_activity_result_id(request, activity_result.id)

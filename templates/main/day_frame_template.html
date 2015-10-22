@@ -1,7 +1,15 @@
 <div class="panel {% if day_plan.IsPast %}panel-default{% endif %}{% if day_plan.IsToday %}panel-success{% endif %}{% if day_plan.IsFuture %}panel-info{% endif %}">
     <div class="panel-heading text-center">{{ day_plan.day.name }} ({{ day_plan.date }})</div>
     <div class="panel-body">
-        <a href="#"
+        <a href="{% if not day_plan.physical_activity_result and not day_plan.IsPast %}
+                    {% url 'physical_activity_result' day_plan.date.year day_plan.date.month day_plan.date.day %}
+                {% elif not day_plan.physical_activity_result.id and not day_plan.IsPast %}
+                    {% url 'physical_activity_result' day_plan.date.year day_plan.date.month day_plan.date.day day_plan.physical_activity_result.planned_activity.id %}
+                {% elif day_plan.physical_activity_result and day_plan.physical_activity_result.id %}
+                    {% url 'physical_activity_result' day_plan.physical_activity_result.id %}
+                {% else %}
+                    #
+                {% endif %}"
            class="list-group-item {% if day_plan.IsPast %}panel-default{% endif %}
                                   {% if day_plan.IsToday %}panel-success{% endif %}
                                   {% if day_plan.IsFuture %}panel-info{% endif %}">
