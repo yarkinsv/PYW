@@ -76,7 +76,7 @@ class PhysicalActivity(models.Model):
 
 class PhysicalActivityResult(models.Model):
     date = models.DateField(default=timezone.now())
-    planned_activity = models.ForeignKey(PhysicalActivity)
+    planned_activity = models.ForeignKey(PhysicalActivity, null=True)
     result = models.CharField(max_length=1,
                               choices=ActivityResult.choices,
                               validators=[ActivityResult.validator],

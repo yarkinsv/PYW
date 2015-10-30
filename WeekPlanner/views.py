@@ -118,13 +118,25 @@ def educational_activity_result_create_activity_id(request, year, month, day, ac
 
 def physical_activity_result_id(request, activity_id):
     activity = get_object_or_404(PhysicalActivityResult, pk=activity_id)
-    activity_types = list(PhysicalActivity.objects.all())
-    exercises = list(Exercise.objects.all())
-    request_context = RequestContext(request)
-    request_context.push({'activity': activity, 'activity_types': activity_types, 'exercises': exercises})
-    template = loader.get_template('main/physical_activity_result_form.html')
-    form = template.render(request_context)
-    return HttpResponse(form)
+    if request.method == 'POST':
+        if not activity.is_future():
+            if 'result' in request.POST:
+                activity.result = ActivityResult.getresult(request.POST['result'])
+            else:
+                activity.result = ActivityResult.Unsuccessful
+            activity.comment = request.POST['comment']
+        if not activity.is_past():
+            activity.planned_activity = get_object_or_404(PhysicalActivity, pk=int(request.POST['planned_activity']))
+        activity.save()
+        return HttpResponseRedirect("/")
+    else:
+        activity_types = list(PhysicalActivity.objects.all())
+        exercises = list(Exercise.objects.all())
+        request_context = RequestContext(request)
+        request_context.push({'activity': activity, 'activity_types': activity_types, 'exercises': exercises})
+        template = loader.get_template('main/physical_activity_result_form.html')
+        form = template.render(request_context)
+        return HttpResponse(form)
 
 
 def physical_activity_result_create(request, year, month, day):
