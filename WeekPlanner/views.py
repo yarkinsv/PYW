@@ -119,15 +119,18 @@ def educational_activity_result_create_activity_id(request, year, month, day, ac
 def physical_activity_result_id(request, activity_id):
     activity = get_object_or_404(PhysicalActivityResult, pk=activity_id)
     if request.method == 'POST':
-        if not activity.is_future():
-            if 'result' in request.POST:
-                activity.result = ActivityResult.getresult(request.POST['result'])
-            else:
-                activity.result = ActivityResult.Unsuccessful
-            activity.comment = request.POST['comment']
-        if not activity.is_past():
-            activity.planned_activity = get_object_or_404(PhysicalActivity, pk=int(request.POST['planned_activity']))
-        activity.save()
+        if request.POST['respond'] == 'confirm':
+            if not activity.is_future():
+                if 'result' in request.POST:
+                    activity.result = ActivityResult.getresult(request.POST['result'])
+                else:
+                    activity.result = ActivityResult.Unsuccessful
+                activity.comment = request.POST['comment']
+            if not activity.is_past():
+                activity.planned_activity = get_object_or_404(PhysicalActivity, pk=int(request.POST['planned_activity']))
+            activity.save()
+        elif request.POST['respond'] == 'delete':
+            activity.delete()
         return HttpResponseRedirect("/")
     else:
         activity_types = list(PhysicalActivity.objects.all())
