@@ -110,6 +110,18 @@ class SingleTask(models.Model):
     def __str__(self):
         return self.name
 
+    def week_day_name(self):
+        return DayOfWeek.Days[self.date.weekday()].name if self.date else ''
+
+    def is_past(self):
+        return self.date < date.today()
+
+    def is_future(self):
+        return self.date > date.today()
+
+    def __str__(self):
+        return self.planned_activity.name if self.planned_activity else ''
+
 
 class DayPlanTemplate(models.Model):
     day = models.CharField(max_length=1,
@@ -120,3 +132,4 @@ class DayPlanTemplate(models.Model):
 
     def __str__(self):
         return self.day
+

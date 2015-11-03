@@ -132,7 +132,7 @@ def physical_activity_result_id(request, activity_id):
         elif request.POST['respond'] == 'delete':
             activity.delete()
         return HttpResponseRedirect("/")
-    else:
+    elif request.method == 'GET':
         activity_types = list(PhysicalActivity.objects.all())
         exercises = list(Exercise.objects.all())
         request_context = RequestContext(request)
@@ -165,3 +165,37 @@ def physical_activity_result_create_activity_id(request, year, month, day, activ
         activity_result.date = activity_date
         activity_result.save()
     return physical_activity_result_id(request, activity_result.id)
+
+
+def single_task_id(request, task_id):
+    task = get_object_or_404(SingleTask, pk=task_id)
+    if request.method == 'POST':
+        if request.POST['respond'] == 'confirm':
+            if not task.is_future():
+                if 'result' in request.POST:
+                    task.result = ActivityResult.getresult(request.POST['result'])
+                else:
+                    task.result = ActivityResult.Unsuccessful
+                task.comment = request.POST['comment']
+            task.description = request.POST['description']
+            task.name = request.POST['name']
+        elif request.POST['respond'] == 'delete':
+            task.delete()
+        return HttpResponseRedirect("/")
+    elif request.method == 'GET':
+        request_context = RequestContext(request)
+        template = loader.get_template('main/single_task_form.html')
+        form = template.render(request_context)
+        return HttpResponse(form)
+
+
+def single_task_create(request, year, month, day):
+    task_date = datetime.date(int(year), int(month), int(day))
+    task_list = list(SingleTask.objects.filter(date=task_date)[:1])
+    if task_list:
+        task = task_list[0]
+    else:
+        task = SingleTask()
+        task.date = task_date
+        task.save()
+    return single_task_id(request, task.id)
