@@ -21,15 +21,17 @@
     </div>
     <form class="form-horizontal" role="form" method="post" action=".">{% csrf_token %}
         <div class="form-group">
-            <label class="control-label col-sm-2" for="planned_activity">Planned Activity:</label>
+            <label class="control-label col-sm-2" for="name">Name:</label>
             <div class="col-sm-10">
-                <select class="form-control" id="planned_activity" name="planned_activity"
-                        {% if activity.is_past %} disabled {% endif %}>
-                    {% for a in activity_types %}
-                    <option value="{{ a.id }}" {% if a.id == activity.planned_activity.id %}selected="selected"{% endif %}>
-                        {{ a }}</option>
-                    {% endfor %}
-                </select>
+                <input class="form-control" id="name" name="name" {% if task.is_future %} disabled {% endif %}
+                       value="{{ task.name }}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="description">Description:</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" rows="3" id="description" name="description"
+                        {% if task.is_future %} disabled {% endif %}>{{ task.description }}</textarea>
             </div>
         </div>
         <div class="form-group">
@@ -37,44 +39,15 @@
             <div class="col-sm-10">
                 <input type="checkbox" data-toggle="toggle" data-onstyle="success" id="result" name="result"
                        data-on="Completed" data-off="Uncompleted"
-                       {% if activity.result == 'C' %} checked {% endif %}
-                       {% if activity.is_future %} disabled {% endif %}>
+                       {% if task.result == 'C' %} checked {% endif %}
+                       {% if task.is_future %} disabled {% endif %}>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="comment">Comment:</label>
             <div class="col-sm-10">
                 <textarea class="form-control" rows="3" id="comment" name="comment"
-                        {% if activity.is_future %} disabled {% endif %}>{{ activity.comment }}</textarea>
-            </div>
-        </div>
-        <div class="form-group" {% if activity.is_future %} style = "display:none" {% endif %}>
-            <label class="control-label col-sm-2">Exercises:</label>
-            <div class="col-sm-10">
-                <table cellspacing="10">
-                    <tbody>
-                        {% for x in activity.planned_activity.program.exercises.all %}
-                        <tr>
-                            <td width="1%" style="vertical-align: middle;">
-                                <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
-                            </td>
-                            <td width="40%">
-                                <select class="form-control" id="" name="" {% if activity.is_past %} disabled {% endif %}>
-                                {% for e in exercises %}
-                                    <option value="{{ e.id }}" {% if a.id == e.id %}selected="selected"{% endif %}>{{ e }}</option>
-                                {% endfor %}
-                                </select>
-                            </td>
-                            <td width="10%">
-                                <input type="text" class="form-control" width="10">
-                            </td>
-                            <td>kg</td>
-                            <td width="50%"></td>
-                        </tr>
-                        {% endfor %}
-                        <tr><td><a href="#">Add</a></td></tr>
-                    </tbody>
-                </table>
+                        {% if task.is_future %} disabled {% endif %}>{{ task.comment }}</textarea>
             </div>
         </div>
         <div class="form-group">

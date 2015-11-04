@@ -119,9 +119,6 @@ class SingleTask(models.Model):
     def is_future(self):
         return self.date > date.today()
 
-    def __str__(self):
-        return self.planned_activity.name if self.planned_activity else ''
-
 
 class DayPlanTemplate(models.Model):
     day = models.CharField(max_length=1,

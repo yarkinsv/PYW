@@ -37,7 +37,13 @@
                 {{ day_plan.educational_activity_result}}&zwnj;
             </font>
         </a>
-        <a href="#"
+        <a href="{% if not day_plan.single_task and not day_plan.IsPast %}
+                    {% url 'single_task' day_plan.date.year day_plan.date.month day_plan.date.day %}
+                {% elif day_plan.single_task and day_plan.single_task.id %}
+                    {% url 'single_task' day_plan.single_task.id %}
+                {% else %}
+                    #
+                {% endif %}"
            class="list-group-item {% if day_plan.IsPast %}panel-default{% endif %}
                                   {% if day_plan.IsToday %}panel-success{% endif %}
                                   {% if day_plan.IsFuture %}panel-info{% endif %}">

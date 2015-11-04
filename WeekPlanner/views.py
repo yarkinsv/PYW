@@ -179,12 +179,14 @@ def single_task_id(request, task_id):
                 task.comment = request.POST['comment']
             task.description = request.POST['description']
             task.name = request.POST['name']
+            task.save()
         elif request.POST['respond'] == 'delete':
             task.delete()
         return HttpResponseRedirect("/")
     elif request.method == 'GET':
         request_context = RequestContext(request)
         template = loader.get_template('main/single_task_form.html')
+        request_context.push({'task': task})
         form = template.render(request_context)
         return HttpResponse(form)
 
