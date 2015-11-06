@@ -71,16 +71,19 @@ def index(request):
 def educational_activity_result_id(request, activity_id):
     activity = get_object_or_404(EducationalActivityResult, pk=activity_id)
     if request.method == 'POST':
-        if not activity.is_future():
-            if 'result' in request.POST:
-                activity.result = ActivityResult.getresult(request.POST['result'])
-            else:
-                activity.result = ActivityResult.Unsuccessful
-            activity.comment = request.POST['comment']
-        if not activity.is_past():
-            activity.planned_activity = get_object_or_404(EducationalActivity, pk=int(request.POST['planned_activity']))
-            activity.planned_result = request.POST['planned_result']
-        activity.save()
+        if request.POST['respond'] == 'confirm':
+            if not activity.is_future():
+                if 'result' in request.POST:
+                    activity.result = ActivityResult.getresult(request.POST['result'])
+                else:
+                    activity.result = ActivityResult.Unsuccessful
+                activity.comment = request.POST['comment']
+            if not activity.is_past():
+                activity.planned_activity = get_object_or_404(EducationalActivity, pk=int(request.POST['planned_activity']))
+                activity.planned_result = request.POST['planned_result']
+            activity.save()
+        elif request.POST['respond'] == 'delete':
+            activity.delete()
         return HttpResponseRedirect("/")
     else:
         activity_types = list(EducationalActivity.objects.all())
@@ -199,5 +202,8 @@ def single_task_create(request, year, month, day):
     else:
         task = SingleTask()
         task.date = task_date
+        task.comment = ""
+        task.description = ""
+        task.name = ""
         task.save()
     return single_task_id(request, task.id)

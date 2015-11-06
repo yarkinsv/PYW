@@ -47,7 +47,11 @@
            class="list-group-item {% if day_plan.IsPast %}panel-default{% endif %}
                                   {% if day_plan.IsToday %}panel-success{% endif %}
                                   {% if day_plan.IsFuture %}panel-info{% endif %}">
-            {{ day_plan.single_task }}&zwnj;
+            <font color="{% if not day_plan.IsFuture and day_plan.single_task.result == 'C' %}#54C571{% endif %}
+                         {% if not day_plan.IsFuture and day_plan.single_task.result == 'U' %}#E77471{% endif %}
+                         {% if day_plan.IsFuture %}#AFDCEC{% endif %}">
+                {{ day_plan.single_task }}&zwnj;
+            </font>
         </a>
     </div>
 </div>

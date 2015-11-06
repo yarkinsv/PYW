@@ -23,31 +23,28 @@
         <div class="form-group">
             <label class="control-label col-sm-2" for="name">Name:</label>
             <div class="col-sm-10">
-                <input class="form-control" id="name" name="name" {% if task.is_future %} disabled {% endif %}
-                       value="{{ task.name }}"/>
+                <input class="form-control" id="name" name="name" value="{{ task.name }}"/>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="description">Description:</label>
-            <div class="col-sm-10">
+            <div class="col-sm-10" >
                 <textarea class="form-control" rows="3" id="description" name="description"
-                        {% if task.is_future %} disabled {% endif %}>{{ task.description }}</textarea>
+                        {% if task.is_past %} disabled {% endif %}>{{ task.description }}</textarea>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" {% if task.is_future %} style = "display:none" {% endif %}>
             <label class="control-label col-sm-2" for="result">Result:</label>
             <div class="col-sm-10">
                 <input type="checkbox" data-toggle="toggle" data-onstyle="success" id="result" name="result"
                        data-on="Completed" data-off="Uncompleted"
-                       {% if task.result == 'C' %} checked {% endif %}
-                       {% if task.is_future %} disabled {% endif %}>
+                       {% if task.result == 'C' %} checked {% endif %}>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" {% if task.is_future %} style = "display:none" {% endif %}>
             <label class="control-label col-sm-2" for="comment">Comment:</label>
             <div class="col-sm-10">
-                <textarea class="form-control" rows="3" id="comment" name="comment"
-                        {% if task.is_future %} disabled {% endif %}>{{ task.comment }}</textarea>
+                <textarea class="form-control" rows="3" id="comment" name="comment">{{ task.comment }}</textarea>
             </div>
         </div>
         <div class="form-group">
