@@ -12,6 +12,8 @@ PlanYourWeek
 
 ## Website for planning physical, educational and other tasks by weeks
 
+![full_week](https://github.com/yarkinsv/PYW/blob/master/Screenshots/full_week_example.png)
+
 There are a ton of time managers and productivity planners. Why did I decide to create yet another one?
 Because I want the tool that matches exactly the needs I have. And I don't need extensive functionality, 
 that actually only disturbs me. My concept is this: every day has three sections - one for physical activities, 
